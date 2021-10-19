@@ -1,0 +1,256 @@
+Container nedir?
+Container veya konteyner temel olarak işletim sistemi kaynaklarını etkin bir şekilde kullanmaya imkan veren bir yapıdır.
+
+Bilgisayarlarda yer alan işlemci ve ram işletim sistemi tarafından her zaman tam olarak kullanılmaz.
+
+Kaynaklar tam olarak kullanılmadığından bilgisayar kaynaklarını bölünerek farklı programlar tarafından verimli bir şekilde kullanılması sağlanır.
+
+Bu amaçla VMWare, Virtualbox gibi çeşitli sanallaştırma yazılımları kullanılmaktadır.
+
+Sanallaştırma yazılımları kaynakların paylaşımını yaparken yeniden bir işletim sistemi kurulumuna ihtiyaç duymaktadır.
+
+Yeniden bir işletim sistemi kurulumu beraberinde uygulamaların ihtiyaç duymadığı kaynakların gereksiz yere kullanılması neden olur.
+
+Örneğin; Kullanıcı bilgilerini saklamak için kullanılan bir uygulama ekran kaynaklarını kullanmayabilir.
+
+Ancak işletim sistemi programları ekran kartına ihtiyaç duyduğundan uygulama için gerekli olmayan ekran kartı kaynakları da kullanılmış olur.
+
+Sanallaştırma sonucu ortaya çıkan işletim sisteminin çalışması için yeniden başlatılması ve yüklenme işleminin gerçekleşmesi gerekir.
+
+Konteyner yapısında ise uygulamanın ihtiyaç duyduğu kaynaklar yazılımsal olarak paylaşılarak sanallaştırma sonucu ortaya çıkan gereksiz kaynak kullanımının önüne geçilmiş olur.
+
+Konteyner yapısında mevcut işletim sistemi kaynakları bölündüğünden uygulamaların hızlıca çalışması sağlanır.
+
+Ayrıca konteyner yapısında yer alan imaj ile uygulama için gerekli olan çalışma ortamı hazırlanarak uygulamanın taşınabilir olması sağlanır.
+
+Docker kurulumu
+Kurulum için gerekli olan dosyalar docker.com adresinden indirilir ve işletim sistemine göre kurulum yapılır.
+
+Kurulum işletim sistemine bir uygulama kurulumu gibi yapılır.
+
+Docker kullanımı
+İşletim sistemi komut yorumlayıcısına (CMD, Powershell, Bash gibi) aşağıdaki komutları yazarak kurulum kontrol edilir.
+
+docker version
+Sistemde yer alan imaj, konteyner, çalışan konteyner sayısı ile detaylı bilgi için aşağıdaki komut kullanılır.
+
+docker info
+Örnek konteyner kullanımı için aşağıdaki komut kullanılabilir.
+
+docker run hello-world
+Komut hello-world imajını kullanarak bir konteyner oluşturacaktır.
+
+Docker kullanımından önce çalışma biçiminin bilinmesi faydalı olacaktır.
+
+Docker konteyner oluşturmak için imaj olarak adlandırılan dosyalara ihtiyaç duyar.
+
+İmaj temel olarak Dockerfile dosyası ile konteyner başlatılırken veya başlatıldıktan sonra çalıştırılacak olan dosya ve ayarları içerir.
+
+Docker imaj içerisinde yer alan komutları kullanarak konteyner oluşturur ve çalıştırır.
+
+Yukarıda yer alan hello-world örneğinde ilk olarak hello-world imajı bilgisayarda aranır imaj bulunmadığında hub.docker.com adresinden indirilerek konteyner oluşturulur.
+
+Konteyner oluşturulduktan sonra imaj içerisinde yer alan Dockerfile ayarları kullanılarak komutlar çalıştırılır.
+
+Docker ile çalışırken yeni bir imaj oluşturulabilir.
+
+Ancak imaj oluşturmadan önce hub.docker.com adresinde yer alan imajları kullanmak zaman açısından faydalı olacaktır.
+
+İmaj aramak için search komutu kullanılır.
+
+docker search hello-world
+İmaj indirmek için pull komutu kullanılır.
+
+docker pull hello-world
+İmajları listelemek için images komutu kullanılır.
+
+docker images
+İmaj silmek için rmi komutu kullanılır.
+
+docker rmi hello-world
+İmaj geçmişi için history komutu kullanılır.
+
+docker history hello-world
+İmaj çalıştırmak için run komutu kullanılır.
+
+docker run hello-world
+NOT: Listede yer almayan imajlar hub.docker.com adresinden indirilir.
+
+İmaj çalıştırmanın imaj içeriğine göre farklı kullanımı vardır.
+
+İmaji özel bir ad ile çalıştırmak için –name parametresi kullanılır.
+
+docker run --name benim-imajim hello-world
+İmajı etkileşimli bir şekilde çalıştırmak için -it (interactive) parametresi kullanılır.
+
+docker run -it centos /bin/bash
+İmaji arka planda çalıştırmak için -d parametresi kullanılır.
+
+docker run -d hello-world
+İmaj portunu dışarı aktarmak için -p parametresi kullanılır.
+
+docker run -it -p 1453:80 nginx
+Tarayıcıdan localhost:1453 adresine girin.
+
+NOT: İmajın kullandığı 80 portuna 1453 ile erişim sağladık.
+
+Uygulama veya diğer dosyaların imaj tarafından kullanılması için volume özelliği ile imaja geçirilmesi gerekir.
+
+Dosyaları imaja geçmek için -v parametresi kullanılır.
+
+docker run -v "Dosya-dizin-yolu":/usr/share/nginx/html:ro -it -p 1453:80 nginx
+Aktif dizini imaja geçirmek için çeşitli işletim sistemi komutları kullanılabilir.
+
+docker run -v %cd%:/usr/share/nginx/html:ro -it -p 1453:80 nginx
+docker run -v $(pwd):/usr/share/nginx/html:ro -it -p 1453:80 nginx
+NOT: Dizin yolu gösterimi işletim sistemine göre farklılık gösterir.
+
+Çalışan konteynerlerı listelemek için ps komutu kullanılır.
+
+docker ps
+Tüm konteynerları listelemek için -a parametresi kullanılır.
+
+docker ps -a
+Konteyner işlemleri için top komutu kullanılır.
+
+docker top konteyner-id
+Çalışan konteynerı durdurmak için stop komutu kullanılır.
+
+docker stop konteyner-id
+Çalışan konteynerı zorla durdurmak için kill komutu kullanılır.
+
+docker kill konteyner-id
+Durdurulan konteynerı çalıştırmak için start komutu kullanılır.
+
+docker start konteyner-id
+Çalışan konteynerı etkileşimli hale getirmek için attach komutu kullanılır.
+
+docker attach konteyner-id
+Durdurulan konteynerı etkileşimli olarak çalıştırmak için ai parametresi kullanılır.
+
+docker start -ai konteyner-id
+Konteyner hakkında bilgi almak için inspect komutu kullanılır.
+
+docker inspect konteyner-id
+Çalışan konteynera ait kaynak kullanımı bilgisi için stats komutu kullanılır.
+
+docker stats konteyner-id
+Konteynera ait günlük bilgisi için logs komutu kullanılır.
+
+docker logs konteyner-id
+Konteyner silmek için rm komutu kullanılır.
+
+docker rm konteyner-id
+Konteyner çalışmasını bitirdikten sonra otomatik olarak silinmesi için –rm parametresi kullanılır.
+
+docker run --rm hello-world
+Tüm konteynerları silmek için aşağıdaki komutlar kullanılır.
+
+docker rm $(docker ps -aq)
+docker sytem prune
+NOT: Çalışan konteynerı silmek için öncelikle durdurulmalıdır.
+
+NOT: Docker içerisinde bir işlemi yapan birden fazla komut yer almaktadır.
+
+Dockerfile
+Özel bir imaj oluşturmak için Dockerfile dosyası kullanılır.
+
+Dosya içerisinde konteyner oluştururken yapılacak işlemlerle ilgili çeşitli talimatlar yer alır.
+
+FROM – Kullanılacak imajı ifade eder.
+
+LABEL – İmaj etiketini ifade eder.
+
+RUN – Çalıştırılacak komutları ifade eder. (İmaj için gerekli yüklemeler için kullanılır.)
+
+CMD – Çalıştırılacak komutları ifade eder. (İmaj için gerekli yüklemeler yapıldıktan sonra çalıştırılacak komutlar için kullanılır.)
+
+ENTRYPOINT – Çalıştırılacak komutların yolunu ifade eder.
+
+COPY – İmaja kopyalanacak dosyaları ifade eder.
+
+WORKDIR – Çalışma dizinini ifade eder.
+
+ENV – Ortam değişkenlerini ifade eder.
+
+EXPOSE – İmaj port numarasını ifade eder.
+
+VOLUME – İmaja paylaşılacak/geçirilecek dosyaları ifade eder.
+
+Dockerfile ile imaj oluşturmak için build komutu kullanılır.
+
+docker build -t imaj-adi:surum -f Dockerfile-dosyasi
+Dockerfile aynı klasörde ise sadece nokta (.) kullanmak yeterli olacaktır.
+
+docker build -t imaj-adi:surum .
+Aşağıdaki dosyayı Dockerfile olarak oluşturun.
+
+FROM centos
+LABEL Vendor="SEZER" License=MIT Version=0.1
+
+CMD ["echo", "Imaj oluşturuldu."]
+Aşağıdaki komut ile imajı oluşturun.
+
+docker build -t imaj:0.1 .
+İmajları listeleyin.
+
+docker images
+Oluşturulan imajın id bilgisini alarak çalıştırın.
+
+docker run imaj-id
+Ekrana Imaj oluşturuldu. yazacaktır.
+
+Benzer şekilde isteğinize uygun imaj oluşturabilirsiniz.
+
+Java komutlarını çalıştıran örnek Dockerfile dosyası aşağıda yer almaktadır.
+
+FROM java:8
+COPY . /var/www/java
+WORKDIR /var/www/java
+RUN javac dosya.java
+CMD ["java", "dosya"]
+NOT: İhtiyaca göre yukarıda yer alan talimatları kullanarak imaj oluşturabilirsiniz.
+
+Docker compose
+Geliştirilen bir uygulama birden fazla servis kullanabilir.
+
+Örnek olarak Node.js, PHP, C# veya Java gibi bir programlama dili kullanılarak geliştirilen bir uygulama MySQL, SQL Server veya MongoDB gibi veritabanına ihtiyaç duyabilir.
+
+Uygulamaya göre log, http server gibi servislerde kullanılabilir.
+
+Bu durumda tüm servisleri bir imaj içerisinde toplamak yerine farklı imaj altında toplanması esnek kullanım için faydalı olacaktır.
+
+Her bir imajı ayrı ayrı oluşturmak ve yönetmek zor olacaktır.
+
+Bir imaj içerinde çalışan uygulama başka bir imaj içerisinde yer alan imaja bağımlı olabilir.
+
+Bu durumda Docker compose özelliği ile birden fazla imajın yönetimi sağlanır.
+
+Docker compose ayarları docker-compose.yml dosyasında saklar.
+
+version: "3"
+
+services:
+    mysql:
+        image: mysql
+        ports: 
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: veritabani
+            MYSQL_USER: kullanici_adi
+            MYSQL_PASSWORD: kullanici_sifre
+            MYSQL_ROOT_PASSWORD: root_sifre
+    php:
+        build: 
+            context: ./php/
+        ports: 
+            - "8001:80"
+        volumes:
+            - ./www:/var/www/html/
+        depends_on:
+            - mysql
+Örnekte mysql servisi port ve ortam değişkenleri ayarı yapılmıştır.
+
+php servisinde ise php klasöründe yer alan Dockerfile dosyası kullanılmış, volumes ile kullanılacak dosyalar, depends_on ile imajın bağlı olduğu imaj belirlenmiştir.
+
+Bu ayarlar kullanılacak yapıya göre farklılık göstereceğinden uygun yapının ihtiyaca göre hazırlanması faydalı olacaktır.
